@@ -12,12 +12,12 @@ import yaml
 from faker import Factory
 from xlrd import open_workbook
 
-from config.ptahconf import CASEYMAL_DIR, LOCATORYMAL_DIR
-from config.setting import IS_REDIS
-from public.common import ErrorExcep, logger
+from config import CASEYMAL_DIR, LOCATORYMAL_DIR
+from public.common import ErrorExcep, logger, reda_conf
 from public.db import RedisPool
 
 fake = Factory().create('zh_CN')
+
 
 
 # 读取Excel 数据
@@ -85,6 +85,8 @@ class GetCaseYmal:
         :param yaml_name:  yaml 文件名称
         :param case_name:  用列名称 对应 yaml 用列
         """
+        # 读取配置参数
+        IS_REDIS= reda_conf('CURRENCY').get('IS_REDIS')
         self.isredis = IS_REDIS  # 是否读取reds数据
 
         self.yaml_name = yaml_name  # yaml 文件名称 拼接后的路径
@@ -430,11 +432,35 @@ class GetCaseYmal:
         """
         return self.get_set(index, 'types')
 
+    def ios_types(self, index: int) -> str:
+        """
+        返回 用列步骤 ios_types 参数
+        """
+        return self.get_set(index, 'ios_types')
+
+    def android_types(self, index: int) -> str:
+        """
+        返回 用列步骤 android_types 参数
+        """
+        return self.get_set(index, 'android_types')
+
     def operate(self, index: int) -> str:
         """
         返回 用列步骤 operate 参数
         """
         return self.get_set(index, 'operate')
+
+    def ios_locate(self, index: int) -> str:
+        """
+        返回 用列步骤 ios_locate 参数
+        """
+        return self.get_set(index, 'ios_locate')
+
+    def android_locate(self, index: int) -> str:
+        """
+        返回 用列步骤 android_locate 参数
+        """
+        return self.get_set(index, 'android_locate')
 
     def locate(self, index: int) -> str:
         """
@@ -481,7 +507,7 @@ class RandomData:
         随机手机号码
         :return:  int
         """
-        return fake.phone_number(self)
+        return fake.phone_number()
 
     @property
     def random_email(self):
@@ -489,7 +515,7 @@ class RandomData:
         随机邮箱
         :return:
         """
-        return fake.email(self)
+        return fake.email()
 
     @property
     def random_job(self):
@@ -497,7 +523,7 @@ class RandomData:
        随机职位
        :return:
        """
-        return fake.job(self)
+        return fake.job()
 
     @property
     def random_ssn(self):
@@ -513,7 +539,7 @@ class RandomData:
         随机 公司名
         :return:
         """
-        return fake.company(self)
+        return fake.company()
 
     @property
     def random_city(self):
@@ -529,7 +555,7 @@ class RandomData:
         随机 省份
         :return:  str
         """
-        return fake.province(self)
+        return fake.province()
 
     @property
     def random_country(self):
@@ -537,7 +563,7 @@ class RandomData:
         随机 国家
         :return:  str
         """
-        return fake.country(self)
+        return fake.country()
 
     @property
     def random_address(self):
@@ -545,7 +571,7 @@ class RandomData:
         随机住址信息
         :return:  str
         """
-        return fake.address(self)
+        return fake.address()
 
     @property
     def random_time(self):
@@ -569,7 +595,7 @@ class RandomData:
         随机年份
         :return: str
         """
-        return fake.month(self)
+        return fake.month()
 
     @property
     def random_date_this_month(self):
@@ -621,7 +647,10 @@ def replace_py_yaml(file):
     return os.path.basename(file).replace('py', 'yaml')
 
 
-#  快速获取测试数据 *元组 WEB、APP
+
+
+
+# 快速获取测试数据 *元组 WEB、APP
 def reda_pytestdata(yamlname: str, casename: str, ) -> List or Tuple:
     """
     * pytest.mark.parametrize()  *此函数只支持在pytes框架内使用
@@ -647,7 +676,11 @@ def reda_api_casedata(yamlname: str, casename: str) -> List or Tuple:
 
     return testdata.test_data()
 
+
 # 写入到yaml文件
-# with open(d.FLIE_PATH, "w", encoding="utf-8") as f:
-#
-#     yaml.dump(xx, f, allow_unicode=True)
+if __name__ == '__main__':
+    # IS_CLEAN_REPORT=reda_seting_yaml()[0].get('IS_CLEAN_REPORT')
+    # print(reda_seting_yaml()[0].get('CURRENCY').get('IS_CLEAN_REPORT'))
+    # print(reda_seting_yaml())
+
+    print(reda_conf('CURRENCY').get('IS_CLEAN_REPORT'))

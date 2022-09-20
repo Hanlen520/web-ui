@@ -24,14 +24,16 @@ class TestBaiDu:
     @allure.description('输入多参数搜索')  # 用例描述
     @pytest.mark.testbaidu_web  # 用列标记
     @pytest.mark.parametrize('content', reda_pytestdata(__file__, 'test_baidu_search'))  # 测试数据
-    def test_baidu_search(self, webDriver,content):
-        baidu = BaiDu(webDriver)
+    def test_baidu_search(self, goDriver,content):
+        baidu = BaiDu(goDriver)
 
         with allure.step('输入搜索内容'):
             baidu.input_search_content(content)
 
 
         with allure.step('点击搜索'):
+
+
             baidu.click_search_button()
 
             baidu.sleep(3)
@@ -39,4 +41,9 @@ class TestBaiDu:
             # 对比查询后图片结果
             search_relust = baidu.screen_shot('search')
             df = ImgDiff.ahaDiff('python.png', search_relust)
-            assert df < 10
+            assert df < 50
+
+
+
+
+

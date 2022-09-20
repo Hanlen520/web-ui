@@ -13,15 +13,22 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from config.ptahconf import PRPORE_TMP
-from config.setting import EMAIL_PORT, EMAIL_HOST, SEND_EMAIL_PASSWORD, SEND_EMAIL_USERNAME, RECEIVE_EMAIL_USER
-from public.common import logger
+from config import PRPORE_TMP
+from public.common import logger, reda_conf
+
+# 读取配置参数
+EMAIL = reda_conf('MSG').get('EMAIL')
+EMAIL_PORT = EMAIL.get('email_port')
+EMAIL_HOST = EMAIL.get('email_host')
+SEND_EMAIL_PASSWORD = EMAIL.get('send_email_password')
+SEND_EMAIL_USERNAME = EMAIL.get('send_email_username')
+RECEIVE_EMAIL_USER = EMAIL.get('receive_email_user')
 
 
 class SendEMail:
     """封装发送邮件类"""
 
-    def __init__(self, host: str = EMAIL_HOST, port: str = EMAIL_PORT, username: str = SEND_EMAIL_USERNAME,
+    def __init__(self, host: str = EMAIL_HOST, port: int = EMAIL_PORT, username: str = SEND_EMAIL_USERNAME,
                  paswword: str = SEND_EMAIL_PASSWORD, receive_email_user: list = RECEIVE_EMAIL_USER, ):
         """
         :param host: 邮箱地址
